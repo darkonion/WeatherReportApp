@@ -20,19 +20,17 @@ public class WeatherStringUploaderApache {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet request = new HttpGet(fullURL);
 
-        try (CloseableHttpResponse response = httpClient.execute(request)) {
+        try (CloseableHttpResponse response = httpClient.execute(request); BufferedReader reader = new BufferedReader(
+                new InputStreamReader(response.getEntity().getContent()))) {
+
             int responseCode = response.getStatusLine().getStatusCode();
             if (responseCode != 200) {
                 return null;
             }
 
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(response.getEntity().getContent()))
-            ) {
-                String output;
-                while ((output = reader.readLine()) != null) {
-                    return output;
-                }
+            String output;
+            while ((output = reader.readLine()) != null) {
+                return output;
             }
         }
         return null;
