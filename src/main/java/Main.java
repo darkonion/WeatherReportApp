@@ -1,19 +1,20 @@
 import model.Report;
 import reader.JsonToPOJOConverter;
-import reader.WeatherStringUploader;
+import reader.WeatherStringUploaderApache;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         try (Scanner reader = new Scanner(System.in)) {
             mainProgramLoop(reader);
         }
     }
 
-    private static void mainProgramLoop(Scanner reader) {
+    private static void mainProgramLoop(Scanner reader) throws IOException {
         while (true) {
             System.out.println("Insert country code (E.g pl, us, uk, es, ua, fr): ");
             String code = reader.nextLine().toLowerCase().trim();
@@ -27,7 +28,7 @@ public class Main {
                 System.out.println("Wrong zip code, please try again!");
                 continue;
             }
-            String weatherJson = WeatherStringUploader.getWeatherForecast(zip, code);
+            String weatherJson = WeatherStringUploaderApache.getWeatherForecast(zip, code);
             if (weatherJson == null) {
                 System.out.println("Connection Error or non existing zip code, please try again");
                 continue;
@@ -46,20 +47,16 @@ public class Main {
     }
 
     private static boolean checkCode(String in) {
-        boolean exists = false;
         String[] locales = Locale.getISOCountries();
         for (String s : locales) {
             if (s.toLowerCase().equals(in)) {
-                exists = true;
+                return true;
             }
         }
-        return exists;
+        return false;
     }
 
     private static boolean checkZip(String in) {
-        if(in.matches("[0-9]{2}-[0-9]{3}") || in.matches("[0-9]{5}")) {
-            return true;
-        }
-        return false;
+        return in.matches("[0-9]{2}-[0-9]{3}") || in.matches("[0-9]{5}");
     }
 }
