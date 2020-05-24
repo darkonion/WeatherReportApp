@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 
 public class JsonToPOJOConverter {
 
+
     private static final String CLEANING_PATTERN = "[\\[\\]{}^\"|\"$]";
 
     public static Report convert(String weatherString) {
-
         Report report = new Report();
 
         String afterCleanup = weatherString.replaceAll(CLEANING_PATTERN, "");

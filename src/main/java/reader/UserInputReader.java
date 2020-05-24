@@ -1,14 +1,17 @@
+package reader;
+
 import model.Report;
-import reader.JsonToPOJOConverter;
-import reader.WeatherStringUploaderApache;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class UserInputReader {
 
+    private final Pattern first = Pattern.compile("[0-9]{2}-[0-9]{3}");
+    private final Pattern second = Pattern.compile("[0-9]{5}");
 
     public void mainLoop() throws IOException {
 
@@ -64,6 +67,6 @@ public class UserInputReader {
     }
 
     private boolean checkZip(String in) {
-        return in.matches("[0-9]{2}-[0-9]{3}") || in.matches("[0-9]{5}");
+        return first.matcher(in).matches() || second.matcher(in).matches();
     }
 }
